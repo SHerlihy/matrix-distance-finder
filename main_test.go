@@ -14,8 +14,8 @@ func Test(t *testing.T) {
 
 	distOrderCells := allCellsDistOrder(2, 2, 0, 1)
 
-    t.Logf("\n%v\n", expectedCells)
-    t.Logf("\n%v\n", distOrderCells)
+    t.Logf("\nexpected: %v\n", expectedCells)
+    t.Logf("\nrecieved: %v\n", distOrderCells)
 
 	for i, cell := range distOrderCells {
 		expectedCell := expectedCells[i]

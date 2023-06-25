@@ -1,8 +1,8 @@
 package main
 
 import (
-	"fmt"
-	"math"
+    "fmt"
+    "math"
 	"sort"
 )
 
@@ -34,8 +34,9 @@ func allCellsDistOrder(rows int, cols int, rCenter int, cCenter int) [][]int {
 
 	//loop for y=0
 	for x := 1; x <= maxToEdge; x++ {
-		hyp := hypotenuseByPyth(x, 0)
+		hyp := simplifiedDistance(centerCo, []int{rCenter - x, cCenter})
 
+            fmt.Printf("\nFrom 1,1 loop: %v", coordinatesByHypotenuse)
 		equidistantCells := [][]int{}
 
 		l := []int{rCenter - x, cCenter}
@@ -57,11 +58,12 @@ func allCellsDistOrder(rows int, cols int, rCenter int, cCenter int) [][]int {
 			updatedCos := append(coordinatesByHypotenuse[hyp], equidistantCells...)
 			coordinatesByHypotenuse[hyp] = updatedCos
 		}
+            fmt.Printf("\nFrom 1,1 loop: %v", coordinatesByHypotenuse)
 	}
 
 	//loop for x =0
 	for y := 1; y <= maxToEdge; y++ {
-		hyp := hypotenuseByPyth(0, y)
+		hyp := simplifiedDistance(centerCo, []int{rCenter, cCenter - y})
 
 		equidistantCells := [][]int{}
 
@@ -88,7 +90,8 @@ func allCellsDistOrder(rows int, cols int, rCenter int, cCenter int) [][]int {
 
 	for i := 1; i <= maxToEdge; i++ {
 		for j := 1; j <= maxToEdge; j++ {
-			hyp := hypotenuseByPyth(i, j)
+			hyp := simplifiedDistance(centerCo, []int{rCenter - i, cCenter - j})
+
 
 			equidistantCells := [][]int{}
 
@@ -114,7 +117,6 @@ func allCellsDistOrder(rows int, cols int, rCenter int, cCenter int) [][]int {
 					equidistantCells = append(equidistantCells, tl)
 				}
 			}
-
 			_, ok := coordinatesByHypotenuse[hyp]
 
 			if !ok {
@@ -136,11 +138,16 @@ func allCellsDistOrder(rows int, cols int, rCenter int, cCenter int) [][]int {
 
 	sort.Float64s(orderedHypotenus)
 
+    fmt.Printf("\n orderedDistances: %v", orderedHypotenus)
+    fmt.Printf("\n dist by coos: %v", coordinatesByHypotenuse)
+
 	for _, hyp := range orderedHypotenus {
 		currentCoos := coordinatesByHypotenuse[float64(hyp)]
 
         //ordering for ease of debugging
         sort.Slice(currentCoos, func(p, n int) bool { return currentCoos[p][0] < currentCoos[n][0] })
+
+        fmt.Printf("\noreded dist %v coos: %v", hyp, currentCoos)
 
 		if hyp == 0 {
 			distOrderCells = currentCoos
@@ -152,10 +159,15 @@ func allCellsDistOrder(rows int, cols int, rCenter int, cCenter int) [][]int {
 	return distOrderCells
 }
 
-func hypotenuseByPyth(x int, y int) float64 {
-	squares := math.Pow(float64(x), 2) + math.Pow(float64(y), 2)
+func simplifiedDistance(coA []int, coB []int) float64 {
+    r1 := float64(coA[0])
+    r2 := float64(coB[0])
 
-	floatVal := math.Sqrt(float64(squares))
+    c1 := float64(coA[1])
+    c2 := float64(coB[1])
 
-	return floatVal
+    distance :=  math.Abs(r1-r2) + math.Abs(c1-c2)
+
+    fmt.Printf("\nFrom %v to %v dist is %v", coA, coB, distance)
+     return distance
 }
